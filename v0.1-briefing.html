@@ -474,8 +474,6 @@
       <div class="title">MiClaw V0.1 — 产品方案 & 开发计划</div>
       <div class="meta">
         <span>📅 2026-05-26</span>
-        <span>👥 听众:楠哥</span>
-        <span class="badge">草稿 v0</span>
       </div>
     </header>
 
@@ -495,16 +493,12 @@
       <p>进入应用后,读取服务端设定的每个账号的可用积分:在积分将要用完、已经用完、切换模型三个场景引导用户升级会员。</p>
 
       <div class="ref-flow">
-        <strong>① 将满</strong>(A / B 双版本待选) → <strong>② 已满</strong>(切快速 + 引导) → <strong>③ 模型切换</strong>(专家标记)
+        <strong>① 将满</strong> → <strong>② 已满</strong>(切快速 + 引导) → <strong>③ 模型切换</strong>(当日额度已用完)
       </div>
-      <div class="ref-grid">
-        <div class="ref-item pending">
-          <img src="assets/miclaw-chat/chat-将满.png" alt="MiClaw 聊天页 - 将满 A">
-          <div class="ref-caption"><span class="ref-num">1</span>将满 A<span class="ref-tag">待选</span></div>
-        </div>
-        <div class="ref-item pending">
-          <img src="assets/miclaw-chat/chat-将满-v2.png" alt="MiClaw 聊天页 - 将满 B">
-          <div class="ref-caption"><span class="ref-num">1</span>将满 B<span class="ref-tag">待选</span></div>
+      <div class="ref-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="ref-item">
+          <img src="assets/miclaw-chat/chat-将满.png" alt="MiClaw 聊天页 - 将满">
+          <div class="ref-caption"><span class="ref-num">1</span>将满</div>
         </div>
         <div class="ref-item">
           <img src="assets/miclaw-chat/chat-已满.png" alt="MiClaw 聊天页 - 已满">
@@ -512,7 +506,7 @@
         </div>
         <div class="ref-item">
           <img src="assets/miclaw-chat/chat-模型切换.png" alt="MiClaw 聊天页 - 模型切换">
-          <div class="ref-caption"><span class="ref-num">3</span>模型切换(专家标记)</div>
+          <div class="ref-caption"><span class="ref-num">3</span>模型切换(当日额度已用完)</div>
         </div>
       </div>
     </section>
@@ -542,9 +536,9 @@
       </div>
       <h3>3.2 MiClaw 设计稿</h3>
       <div class="ref-flow">
-        <strong>① 我的</strong>(订阅入口) → <strong>② 用量与订阅页</strong>(主页面) → <strong>③ 订阅页</strong>(升级)
+        <strong>① 我的</strong>(订阅入口) → <strong>② 用量与订阅页</strong> → <strong>③ 免费用户用量超额</strong> → <strong>④ 订阅页</strong>(升级)
       </div>
-      <div class="ref-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="ref-grid">
         <div class="ref-item">
           <img src="assets/miclaw-settings/settings-我的.png" alt="MiClaw 我的">
           <div class="ref-caption"><span class="ref-num">1</span>我的(订阅入口)</div>
@@ -554,8 +548,12 @@
           <div class="ref-caption"><span class="ref-num">2</span>用量与订阅页</div>
         </div>
         <div class="ref-item">
+          <img src="assets/miclaw-settings/settings-超额.png" alt="MiClaw 免费用户用量超额">
+          <div class="ref-caption"><span class="ref-num">3</span>免费用户用量超额</div>
+        </div>
+        <div class="ref-item">
           <img src="assets/miclaw-settings/settings-订阅页.png" alt="MiClaw 订阅页">
-          <div class="ref-caption"><span class="ref-num">3</span>订阅页(升级)</div>
+          <div class="ref-caption"><span class="ref-num">4</span>订阅页(升级)</div>
         </div>
       </div>
     </section>
