@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>MiClaw V0.1 — 产品方案 & 开发计划</title>
+<style>
+  :root {
+    --xiaomi-blue: #1A66FF;
+    --xiaomi-blue-light: #E6EFFF;
+    --text-primary: #1F2329;
+    --text-secondary: #646A73;
+    --text-tertiary: #8F959E;
+    --bg-page: #FFFFFF;
+    --bg-card: #F7F8FA;
+    --bg-placeholder: #F2F3F5;
+    --border: #DEE0E3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-primary);
+    background: var(--bg-page);
+    line-height: 1.6;
+    font-size: 16px;
+  }
+  .layout { display: flex; min-height: 100vh; }
+
+  /* 左侧导航 */
+  nav.sidebar {
+    width: 240px;
+    background: var(--bg-card);
+    border-right: 1px solid var(--border);
+    padding: 32px 20px;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    flex-shrink: 0;
+  }
+  nav .brand {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--xiaomi-blue);
+    margin-bottom: 4px;
+  }
+  nav .brand-sub {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    margin-bottom: 24px;
+  }
+  nav .nav-group {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 20px 0 8px;
+    padding-left: 8px;
+  }
+  nav a {
+    display: block;
+    padding: 8px 12px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 14px;
+    margin-bottom: 2px;
+    transition: all 0.15s;
+  }
+  nav a:hover { background: var(--xiaomi-blue-light); color: var(--xiaomi-blue); }
+  nav a.active { background: var(--xiaomi-blue); color: #fff; }
+
+  /* 主内容 */
+  main {
+    flex: 1;
+    padding: 48px 64px;
+    max-width: 920px;
+  }
+  header.page-header { margin-bottom: 48px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
+  header .title { font-size: 32px; font-weight: 600; margin-bottom: 8px; }
+  header .meta { color: var(--text-secondary); font-size: 14px; }
+  header .meta span { margin-right: 16px; }
+  header .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--xiaomi-blue-light);
+    color: var(--xiaomi-blue);
+    border-radius: 4px;
+    font-size: 12px;
+  }
+
+  section { margin-bottom: 64px; scroll-margin-top: 24px; }
+  section h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    padding-left: 12px;
+    border-left: 4px solid var(--xiaomi-blue);
+  }
+  section h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 24px 0 12px;
+    color: var(--text-primary);
+  }
+  section p { margin-bottom: 12px; color: var(--text-primary); }
+
+  /* 范围声明 callout */
+  .callout {
+    background: var(--xiaomi-blue-light);
+    border-left: 4px solid var(--xiaomi-blue);
+    padding: 20px 24px;
+    border-radius: 8px;
+    margin: 16px 0 24px;
+  }
+  .callout .callout-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--xiaomi-blue);
+    margin-bottom: 8px;
+  }
+  .callout p { margin-bottom: 6px; }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* 三屏架构图 */
+  .screen-flow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 24px 0;
+    padding: 24px;
+    background: var(--bg-card);
+    border-radius: 12px;
+    overflow-x: auto;
+  }
+  .screen {
+    flex: 1;
+    min-width: 180px;
+    aspect-ratio: 9 / 16;
+    background: #fff;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    position: relative;
+  }
+  .screen .screen-label {
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--xiaomi-blue);
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 10px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .screen .screen-name { font-size: 16px; font-weight: 600; margin-top: 12px; margin-bottom: 8px; }
+  .screen .screen-desc { font-size: 12px; color: var(--text-secondary); }
+  .screen.drawer { border-style: dashed; }
+  .arrow {
+    color: var(--xiaomi-blue);
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+
+  /* 模块清单 */
+  .module-list {
+    background: var(--bg-card);
+    border-radius: 8px;
+    padding: 16px 24px;
+    margin: 16px 0;
+  }
+  .module-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .module-item:last-child { border-bottom: none; }
+  .module-num {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    background: var(--xiaomi-blue);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 600;
+    margin-right: 16px;
+  }
+  .module-item.primary .module-num { background: var(--xiaomi-blue); }
+  .module-item.secondary .module-num { background: var(--text-tertiary); }
+  .module-name { font-weight: 600; margin-bottom: 4px; }
+  .module-desc { color: var(--text-secondary); font-size: 14px; }
+  .module-tag {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 6px;
+    background: var(--xiaomi-blue-light);
+    color: var(--xiaomi-blue);
+    border-radius: 4px;
+    font-size: 11px;
+  }
+
+  /* 占位区 */
+  .placeholder {
+    background: var(--bg-placeholder);
+    border: 2px dashed var(--border);
+    border-radius: 8px;
+    padding: 40px 24px;
+    text-align: center;
+    color: var(--text-tertiary);
+    margin: 16px 0;
+  }
+  .placeholder .ph-title { font-weight: 600; margin-bottom: 4px; color: var(--text-secondary); }
+  .placeholder .ph-hint { font-size: 13px; }
+
+  /* 参考图横排 */
+  .ref-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .ref-item.pending {
+    border: 1px dashed var(--xiaomi-blue);
+    background: rgba(26, 102, 255, 0.04);
+  }
+  .ref-item .ref-tag {
+    display: inline-block;
+    font-size: 11px;
+    color: var(--xiaomi-blue);
+    background: rgba(26, 102, 255, 0.12);
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-left: 4px;
+    font-weight: 600;
+  }
+  .ref-item {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+  }
+  .ref-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    background: var(--bg-card);
+  }
+  .ref-caption {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+  .ref-caption .ref-num {
+    display: inline-block;
+    background: var(--xiaomi-blue);
+    color: #fff;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    line-height: 18px;
+    font-size: 11px;
+    margin-right: 6px;
+  }
+  .ref-flow {
+    text-align: center;
+    color: var(--text-tertiary);
+    font-size: 13px;
+    margin: 8px 0 16px;
+    background: var(--bg-card);
+    padding: 10px;
+    border-radius: 8px;
+  }
+  .ref-flow strong { color: var(--xiaomi-blue); }
+
+  /* 时间线 */
+  .timeline { margin: 24px 0; }
+  .timeline-item {
+    display: flex;
+    margin-bottom: 24px;
+    position: relative;
+  }
+  .timeline-item:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: 60px;
+    top: 32px;
+    bottom: -24px;
+    width: 2px;
+    background: var(--border);
+  }
+  .timeline-marker {
+    flex-shrink: 0;
+    width: 120px;
+    text-align: center;
+  }
+  .timeline-date {
+    display: inline-block;
+    padding: 6px 12px;
+    background: var(--xiaomi-blue);
+    color: #fff;
+    border-radius: 16px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .timeline-content {
+    flex: 1;
+    background: var(--bg-card);
+    padding: 16px 20px;
+    border-radius: 8px;
+    margin-left: 16px;
+  }
+  .timeline-title { font-weight: 600; margin-bottom: 6px; }
+  .timeline-desc { color: var(--text-secondary); font-size: 14px; }
+
+  /* 列表 */
+  ul.clean { list-style: none; padding-left: 0; }
+  ul.clean li {
+    padding: 8px 0 8px 24px;
+    position: relative;
+    color: var(--text-primary);
+  }
+  ul.clean li::before {
+    content: '';
+    position: absolute;
+    left: 8px;
+    top: 17px;
+    width: 6px;
+    height: 6px;
+    background: var(--xiaomi-blue);
+    border-radius: 50%;
+  }
+  ul.clean ul.sub {
+    margin-top: 4px;
+    margin-left: 16px;
+  }
+  ul.clean ul.sub li {
+    padding: 4px 0 4px 20px;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
+  ul.clean ul.sub li::before {
+    top: 14px;
+    width: 4px;
+    height: 4px;
+    background: var(--text-tertiary);
+  }
+
+  /* 对照表(V0.1 vs 最终形态) */
+  .diff-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0 24px;
+    font-size: 14px;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .diff-table thead th {
+    background: var(--bg-card);
+    color: var(--text-primary);
+    font-weight: 600;
+    padding: 12px 16px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .diff-table thead th:nth-child(3) {
+    background: var(--xiaomi-blue-light);
+    color: var(--xiaomi-blue);
+  }
+  .diff-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+  .diff-table tbody tr:last-child td { border-bottom: none; }
+  .diff-table tbody td:first-child {
+    font-weight: 600;
+    background: var(--bg-card);
+    color: var(--text-secondary);
+  }
+  .diff-table tbody td:nth-child(2) { color: var(--text-secondary); }
+  .diff-table tbody td:nth-child(3) { color: var(--text-primary); }
+
+  /* 功能卡片网格 */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+    margin: 16px 0 24px;
+  }
+  .feature-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: all 0.15s;
+  }
+  .feature-card:hover {
+    background: var(--xiaomi-blue-light);
+    border-color: var(--xiaomi-blue);
+  }
+  .feature-icon { font-size: 22px; margin-bottom: 8px; }
+  .feature-name {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text-primary);
+  }
+  .feature-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  /* 引用文案(用量警示) */
+  .quote {
+    background: #FFF7E6;
+    border-left: 3px solid #FF9500;
+    padding: 12px 16px;
+    border-radius: 6px;
+    margin: 12px 0;
+    font-size: 14px;
+    color: var(--text-primary);
+  }
+  .quote .quote-label {
+    font-size: 12px;
+    color: #FF9500;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .quote.critical {
+    background: #FFEBE6;
+    border-left-color: #E54D2E;
+  }
+  .quote.critical .quote-label { color: #E54D2E; }
+  .quote.future {
+    background: var(--bg-card);
+    border-left-color: var(--text-tertiary);
+  }
+  .quote.future .quote-label { color: var(--text-tertiary); }
+</style>
+</head>
+<body>
+<div class="layout">
+  <nav class="sidebar">
+    <div class="brand">MiClaw V0.1</div>
+    <div class="brand-sub">给楠哥的产品方案 & 开发计划</div>
+
+    <a href="#scope" class="active">一、V0.1 范围</a>
+    <a href="#usage-alert">二、用量提醒</a>
+    <a href="#sub-usage">三、订阅与用量展示</a>
+    <a href="#final-form">四、交付路线图</a>
+  </nav>
+
+  <main>
+    <header class="page-header">
+      <div class="title">MiClaw V0.1 — 产品方案 & 开发计划</div>
+      <div class="meta">
+        <span>📅 2026-05-26</span>
+        <span>👥 听众:楠哥</span>
+        <span class="badge">草稿 v0</span>
+      </div>
+    </header>
+
+    <!-- 一、V0.1 范围 -->
+    <section id="scope">
+      <h2>一、V0.1 范围</h2>
+      <div class="callout">
+        <div class="callout-title">🎯 V0.1 只做一件事</div>
+        <p><strong>6 月第一周内部跑通付费链路</strong></p>
+        <p>全 H5 实现,不做 native 体验。8 月 OS4 再做完整版本。</p>
+      </div>
+    </section>
+
+    <!-- 二、用量提醒 -->
+    <section id="usage-alert">
+      <h2>二、用量提醒</h2>
+      <p>进入应用后,读取服务端设定的每个账号的可用积分:在积分将要用完、已经用完、切换模型三个场景引导用户升级会员。</p>
+
+      <div class="ref-flow">
+        <strong>① 将满</strong>(A / B 双版本待选) → <strong>② 已满</strong>(切快速 + 引导) → <strong>③ 模型切换</strong>(专家标记)
+      </div>
+      <div class="ref-grid">
+        <div class="ref-item pending">
+          <img src="assets/miclaw-chat/chat-将满.png" alt="MiClaw 聊天页 - 将满 A">
+          <div class="ref-caption"><span class="ref-num">1</span>将满 A<span class="ref-tag">待选</span></div>
+        </div>
+        <div class="ref-item pending">
+          <img src="assets/miclaw-chat/chat-将满-v2.png" alt="MiClaw 聊天页 - 将满 B">
+          <div class="ref-caption"><span class="ref-num">1</span>将满 B<span class="ref-tag">待选</span></div>
+        </div>
+        <div class="ref-item">
+          <img src="assets/miclaw-chat/chat-已满.png" alt="MiClaw 聊天页 - 已满">
+          <div class="ref-caption"><span class="ref-num">2</span>已满(切快速 + 引导)</div>
+        </div>
+        <div class="ref-item">
+          <img src="assets/miclaw-chat/chat-模型切换.png" alt="MiClaw 聊天页 - 模型切换">
+          <div class="ref-caption"><span class="ref-num">3</span>模型切换(专家标记)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 三、订阅与用量展示 -->
+    <section id="sub-usage">
+      <h2>三、订阅与用量展示</h2>
+      <p>三层结构,全部全屏切换(避免抽屉到抽屉的难看过渡)。升级动作才弹抽屉。</p>
+
+      <h3>3.1 Kimi 参考(对标产品)</h3>
+      <div class="ref-flow">
+        <strong>① 入口</strong> → <strong>② 订阅页</strong> → 右上角「订阅和发票」 → <strong>③ 账单页</strong>(全屏)
+      </div>
+      <div class="ref-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="ref-item">
+          <img src="assets/kimi/入口.jpg" alt="Kimi 入口">
+          <div class="ref-caption"><span class="ref-num">1</span>入口</div>
+        </div>
+        <div class="ref-item">
+          <img src="assets/kimi/订阅页.jpg" alt="Kimi 订阅页">
+          <div class="ref-caption"><span class="ref-num">2</span>订阅页(主)</div>
+        </div>
+        <div class="ref-item">
+          <img src="assets/kimi/账单页.JPG" alt="Kimi 账单页">
+          <div class="ref-caption"><span class="ref-num">3</span>账单页(全屏)</div>
+        </div>
+      </div>
+      <h3>3.2 MiClaw 设计稿</h3>
+      <div class="ref-flow">
+        <strong>① 我的</strong>(订阅入口) → <strong>② 用量与订阅页</strong>(主页面) → <strong>③ 订阅页</strong>(升级)
+      </div>
+      <div class="ref-grid" style="grid-template-columns: repeat(3, 1fr);">
+        <div class="ref-item">
+          <img src="assets/miclaw-settings/settings-我的.png" alt="MiClaw 我的">
+          <div class="ref-caption"><span class="ref-num">1</span>我的(订阅入口)</div>
+        </div>
+        <div class="ref-item">
+          <img src="assets/miclaw-settings/settings-用量页.png" alt="MiClaw 用量与订阅页">
+          <div class="ref-caption"><span class="ref-num">2</span>用量与订阅页</div>
+        </div>
+        <div class="ref-item">
+          <img src="assets/miclaw-settings/settings-订阅页.png" alt="MiClaw 订阅页">
+          <div class="ref-caption"><span class="ref-num">3</span>订阅页(升级)</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 四、交付路线图 -->
+    <section id="final-form">
+      <h2>四、交付路线图</h2>
+      <p>V0.1 跑通付费链路后,按周迭代功能,8 月随 OS4 完整上线。</p>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-marker"><span class="timeline-date">6 月 W1</span></div>
+          <div class="timeline-content">
+            <div class="timeline-title">V0.1 跑通付费主链路</div>
+            <div class="timeline-desc">内部跑通。</div>
+            <ul class="clean">
+              <li><strong>用量提醒</strong>
+                <ul class="clean sub">
+                  <li>将满 / 已满提示</li>
+                  <li>切换模型入口</li>
+                </ul>
+              </li>
+              <li><strong>订阅与用量展示</strong>
+                <ul class="clean sub">
+                  <li>设置入口 — 客户端</li>
+                  <li>用量展示 — H5</li>
+                  <li>订阅页 — H5</li>
+                </ul>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"><span class="timeline-date">6 月 W2</span></div>
+          <div class="timeline-content">
+            <div class="timeline-title">订阅生命周期</div>
+            <div class="timeline-desc">取消、升降级、活动配置。</div>
+            <ul class="clean">
+              <li>取消订阅</li>
+              <li>多套餐升级 / 降级</li>
+              <li>优惠活动配置</li>
+              <li>赠送活动配置</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"><span class="timeline-date">6 月 W3</span></div>
+          <div class="timeline-content">
+            <div class="timeline-title">财务与精细运营</div>
+            <div class="timeline-desc">退费、发票、用量精细化管理。</div>
+            <ul class="clean">
+              <li>退费</li>
+              <li>发票</li>
+              <li>token 和代币的云控</li>
+              <li>用量明细</li>
+            </ul>
+          </div>
+        </div>
+        <div class="timeline-item">
+          <div class="timeline-marker"><span class="timeline-date">8 月 OS4</span></div>
+          <div class="timeline-content">
+            <div class="timeline-title">完整订阅形态(支付功能全集)</div>
+            <div class="timeline-desc">native 化 + 完整订阅能力 + 分功能限制 + 权益增量。</div>
+            <ul class="clean">
+              <li><strong>Native 订阅入口</strong> — 「我的」入口 + 引导卡片 + 限时活动横幅</li>
+              <li><strong>用量中心</strong> — 总额度 + 分模型 + 分功能 + 用量趋势曲线</li>
+              <li><strong>套餐与支付</strong> — 多档对比(基础 / 进阶 / Pro)+ 年付/月付 + 自动续费管理</li>
+              <li><strong>积分中心</strong> — 签到 / 任务积分 + 兑换商城 + 抵扣规则</li>
+              <li><strong>账单与发票</strong> — 历史订单 + 发票申请 + 退款申请</li>
+              <li><strong>智能触达</strong> — 用量预警 + 续费提醒 + 临期挽留 + 个性化推送</li>
+              <li><strong>功能限制</strong> — 深度研究 / Agent / 图片等次数计费</li>
+              <li><strong>会员权益</strong> — 高级模型解锁 + 会员标识 + 优先排队 + 专属客服</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  // 滚动联动 nav 高亮
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav a');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = entry.target.id;
+        navLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('href') === '#' + id);
+        });
+      }
+    });
+  }, { rootMargin: '-30% 0px -60% 0px' });
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
